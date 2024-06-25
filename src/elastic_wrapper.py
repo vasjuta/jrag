@@ -82,7 +82,6 @@ class ElasticWrapper:
         self.es.indices.create(index=index_name, body=settings)
 
     def index_data(self, index_name, data):
-        # Transform DataFrame to a list of dictionaries
         records = data.to_dict(orient='records')
         actions = [
             {
@@ -106,18 +105,18 @@ class ElasticWrapper:
         ]
         helpers.bulk(self.es, actions)
 
-    # def search(self, query):
-    #     search_query = {
-    #         "query": {
-    #             "multi_match": {
-    #                 "query": query,
-    #                 "fields": ["combined_text"]
-    #             }
-    #         },
-    #         "_source": True
-    #     }
-    #     results = self.es.search(index=self.index_name, body=search_query)
-    #     return [hit["_source"] for hit in results["hits"]["hits"]]
+    def search(self, query):
+        search_query = {
+            "query": {
+                "multi_match": {
+                    "query": query,
+                    "fields": ["combined_text"]
+                }
+            },
+            "_source": True
+        }
+        results = self.es.search(index=self.index_name, body=search_query)
+        return [hit["_source"] for hit in results["hits"]["hits"]]
 
     def search_with_embeddings(self, index_name, query_embedding, k=3):
         search_query = {
