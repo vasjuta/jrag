@@ -4,15 +4,14 @@ from src.elastic_wrapper import ElasticWrapper
 from src.embedding_manager import EmbeddingManager
 from src.qdrant_wrapper import QdrantWrapper
 from src.search_engine import SearchEngine
+import os
 
-# Elasticsearch connection details
-CLOUD_ID = "My_deployment:bWUtd2VzdDEuZ2NwLmVsYXN0aWMtY2xvdWQuY29tOjQ0MyRlNjMwNWFmYjMzMjU0NDMzODBiOTRiZjg5ZmUzYjc3ZiRmMTZhYjZlMzUyOTU0YzMzYWQ4MWJmODA3Nzc4NzU5Nw=="
-ES_USERNAME = "elastic"
-ES_PASSWORD = "Y6rqS2X7rt56XdqKrEoQNbVD"
-INDEX_NAME = 'datasets'
+cloud_id = os.getenv('CLOUD_ID')
+es_username = os.getenv('ES_USERNAME')
+es_password = os.getenv('ES_PASSWORD')
 
 # Initialize the Elasticsearch wrapper
-elastic_wrapper = ElasticWrapper(CLOUD_ID, ES_USERNAME, ES_PASSWORD, "datasets_with_embeddings")
+elastic_wrapper = ElasticWrapper(cloud_id, es_username, es_password, "datasets_with_embeddings")
 
 # Initialize the data manager
 data_manager = DataManager('../data/datasets.xlsx')
@@ -44,8 +43,8 @@ query_embedding = embedding_manager.get_embeddings([query])[0]
 
 # Search in Elasticsearch
 results_es = elastic_wrapper.search_with_embeddings('datasets_with_embeddings', query_embedding)
-results_qd = qdrant_wrapper.search(query_vector=query_embedding)
+#results_qd = qdrant_wrapper.search(query_vector=query_embedding)
 print(results_es)
-print(results_qd)
+#print(results_qd)
 #print(search_engine.search_query(query))
 
